@@ -14,8 +14,11 @@ def home():
 
 @app.route('/refresh', methods=['POST'])
 def refresh():
-    return "hello za warudo"
+	return "hello za warudo"
 
+@app.route('/cars')
+def cars():
+    return send_file('frontend/cars.html')
 	
 if __name__ == '__main__':
 	app.run(debug=True)

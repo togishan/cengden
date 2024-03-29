@@ -150,15 +150,5 @@ def get_user_by_email(email):
     return profile
 
 
-
-#@app.route('/get_data')
-#def get_data():
-#    collection = db.get_collection("profiles")
-#    data = collection.find()
-#    data_list = list(data)
-#    print(data_list)
-#    return json.loads(json_util.dumps(data_list))
-
-
 if __name__ == '__main__':
     app.run(debug=True)

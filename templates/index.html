@@ -1,59 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/index.css') }}">
+</head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sahibinden.com Clone</title>
-<style>
-    body {
-        font-family: Arial, sans-serif;
-        margin: 0;
-        padding: 0;
-    }
-    header {
-        background-color: #e40909;
-        color: #fff;
-        padding: 10px;
-        text-align: center;
-    }
-    nav {
-        background-color: #f4f4f4;
-        padding: 10px;
-        text-align: center;
-    }
-    section {
-        padding: 20px;
-        margin: 10px;
-        border: 1px solid #ddd;
-    }
-</style>
-<script>
-    var intervalID = setInterval(function() {
-            sendPeriodicHttpResponse();
-        }, 2000);
-        
-        function sendPeriodicHttpResponse() {
-            var xhr = new XMLHttpRequest();
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState == 4) {
-                    console.log("answer taken:" + xhr.response)
-                }
-            }
-            xhr.open("POST", "/refresh", true);
-            xhr.send();
-        }
-</script>
+<title>Cengden</title>
+
 </head>
 <body>
     <header>
         <h1>Cengden</h1>
+        <div class="accountpanel">
+            <img class="accountimg" src="{{ url_for('static', filename='accountprofile.png') }}" >
+            {% if session %}
+                <a style="font-size: 11px;" href="/accountPage"> {{session.userinfo.email}} </a>
+                <p><a href="/logout">Logout</a></p>
+                
+            {% else %}
+                <p>Anonymous</p>
+                <p><a href="/login">Login</a></p>
+            {% endif %}
+        </div>
     </header>
+    
     <nav>
         <a href="#" onclick="">Home</a> |
         <a href="/cars">Cars</a> |
         <a href="#">Real Estate</a> |
         <a href="#">Jobs</a> |
         <a href="#">Services</a>
+        
     </nav>
     <section>
         <h2>Featured Listings</h2>

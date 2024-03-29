@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/accountPage.css') }}">
+</head>
+<script src="{{ url_for('static', filename='scripts/accountPage.js') }}"></script>
+<body>
+    <header>
+        <h1>Cengden</h1>
+    </header>
+    <nav>
+        <a href="/" onclick="">Home</a> |
+        <a href="#">Cars</a> |
+        <a href="#">Real Estate</a> |
+        <a href="#">Jobs</a> |
+        <a href="#">Services</a>
+    </nav>
+    <div class="panels-container">
+        <div class="profile-panel">
+            <div class="container">
+                <label for="Username"><strong>Username</strong></label>
+                <input id="username" type="text" placeholder="Enter Username" name="Username" value="{{ current_user.username }}">
+                <br>
+                <label for="mail"><strong>E-mail</strong></label>
+                <input id="email" type="text" placeholder="Enter E-mail" name="mail" value="{{ current_user.email}}" disabled="true">
+                <br>
+                <label for="pnmb"><strong>Phone Number</strong></label>
+                <input id="phone_number" type="text" placeholder="Enter Phone Number" name="pnmb" value="{{ current_user.phone_number }}">
+                <br>
+            </div>
+            <button class="button-36" role="button" onclick="updateProfile()">Update</button>
+        </div>
+        <div id="item-panel" class="items-panel">
+            <h1>Your Items</h1>
+        </div>
+    </div>
+</body>
+</html>

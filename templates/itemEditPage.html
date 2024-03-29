@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/itemEditPage.css') }}">
+</head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cengden</title>
+</head>
+<script src="{{ url_for('static', filename='scripts/itemEditPage.js') }}"></script>
+<body>
+    <header>
+        <h1>Cengden</h1> 
+    </header>
+    
+    <nav>
+        <a href="/" onclick="">Home</a> |
+        <a href="#">Cars</a> |
+        <a href="#">Real Estate</a> |
+        <a href="#">Jobs</a> |
+        <a href="#">Services</a>
+        
+    </nav>
+    <div class="form">
+        <div class="circle"></div>
+        <div class="form-inner">
+          <h1>Edit the item</h1>
+          <button class = "button-36"  onclick="updateItem();">Update</button>
+          <button class = "button-36"  onclick="history.back();">Back</button>
+        </div>
+    </div>
+</body>
+</html>

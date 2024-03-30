@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/itemEditPage.css') }}">
+</head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cengden</title>
+</head>
+<script src="{{ url_for('static', filename='scripts/itemAddPage.js') }}"></script>
+<body>
+    <header>
+        <h1>Cengden</h1> 
+    </header>
+    
+    <nav>
+        <a href="/" onclick="">Home</a> |
+        <a href="#">Cars</a> |
+        <a href="#">Real Estate</a> |
+        <a href="#">Jobs</a> |
+        <a href="#">Services</a>
+        
+    </nav>
+    <div class="form">
+        <div class="circle"></div>
+        <div class="form-inner">
+          <h1>Add an Item</h1>
+          <body>
+            
+              <div class="form-left-decoration"></div>
+              <div class="form-right-decoration"></div>
+              <div class="circle"></div>
+              <div class="form-inner">
+                <label> Select the item category</label>
+                <select name="Category" id="category" onchange="toggleFields()">
+                    <option value="Vehicle">Vehicle</option>
+                    <option value="Computer">Computer</option>
+                    <option value="Phone">Phone</option>
+                    <option value="Private Lesson">Private Lesson</option>
+                </select>
+                <label id="title_label">Title</label>
+                <input id="title" type="text" placeholder="Enter here...">
+
+                <label id="type_label" style="display: none;">Type</label>
+                <input style="display: none;" id="type" type="text" placeholder="Enter here...">
+                
+                <label id="brand_label" style="display: none;">Brand</label>
+                <input style="display: none;" id="brand" type="text" placeholder="Enter here...">
+                
+                <label id="model_label" style="display: none;">Model</label>
+                <input style="display: none;" id="model" type="text" placeholder="Enter here...">
+                
+                <label id="year_label" style="display: none;">Year</label>
+                <input style="display: none;" id="year" type="text" placeholder="Enter here...">
+                
+                <label id="color_label" style="display: none;">Color</label>
+                <input style="display: none;" id="color" type="text" placeholder="Enter here...">
+                
+                <label id="engine_displacement_label" style="display: none;">Engine Displacement</label>
+                <input style="display: none;" id="engine_displacement" type="text" placeholder="Enter here...">
+                
+                <label id="fuel_type_label" style="display: none;">Fuel Type</label>
+                <input style="display: none;" id="fuel_type" type="text" placeholder="Enter here...">
+                
+                <label id="transmission_type_label" style="display: none;">Transmission Type</label>
+                <input style="display: none;" id="transmission_type" type="text" placeholder="Enter here...">
+                
+                <label id="mileage_label" style="display: none;">Mileage</label>
+                <input style="display: none;" id="mileage" type="text" placeholder="Enter here...">
+                <!---->
+                <label id="processor_label" style="display: none;">Processor</label>
+                <input style="display: none;" id="processor" type="text" placeholder="Enter here...">
+                
+                <label id="ram_label" style="display: none;">RAM</label>
+                <input style="display: none;" id="ram" type="text" placeholder="Enter here...">
+                
+                <label id="storage_label" style="display: none;">Storage</label>
+                <input style="display: none;" id="storage" type="text" placeholder="Enter here...">
+                
+                <label id="graphics_card_label" style="display: none;">Graphics Card</label>
+                <input style="display: none;" id="graphics_card" type="text" placeholder="Enter here...">
+                
+                <label id="operating_system_label" style="display: none;">Operating System</label>
+                <input style="display: none;" id="operating_system" type="text" placeholder="Enter here...">
+                
+                <label id="camera_specifications_label" style="display: none;">Camera Specifications</label>
+                <input style="display: none;" id="camera_specifications" type="text" placeholder="Enter here...">
+                
+                <label id="battery_capacity_label" style="display: none;">Battery Capacity</label>
+                <input style="display: none;" id="battery_capacity" type="text" placeholder="Enter here...">
+                
+                <label id="tutor_name_label" style="display: none;">Tutor Name</label>
+                <input style="display: none;" id="tutor_name" type="text" placeholder="Enter here...">
+                
+                <label id="lessons_label" style="display: none;">Lessons</label>
+                <input style="display: none;" id="lessons" type="text" placeholder="Enter here...">
+                
+                <label id="location_label" style="display: none;">Location</label>
+                <input style="display: none;" id="location" type="text" placeholder="Enter here...">
+                
+                <label id="duration_label" style="display: none;">Duration</label>
+                <input style="display: none;" id="duration" type="text" placeholder="Enter here...">
+                
+                <label id="price_label" >Price</label>
+                <input  id="price" type="text" placeholder="Enter here...">
+                
+                <label id="image_label" >Image URL</label>
+                <input  id="image" type="text" placeholder="Enter here...">
+                
+                <label id="description_label" >Description</label>
+                <textarea  id="description" type="text" placeholder="Enter here..."></textarea>
+              </div>
+        
+          </body>
+          <button class = "button-36"  onclick="addItem();">Add</button>
+          <button class = "button-36"  onclick="history.back();">Back</button>
+        </div>
+    </div>
+</body>
+</html>

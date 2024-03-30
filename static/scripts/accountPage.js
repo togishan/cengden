@@ -41,7 +41,7 @@ function setItemsPanel(response)
         itemDiv.className = "item-box";
         itemDiv.style.display = "block";
         loadInnerContent("/static/html/itemContainer.html", function(innerContent) {
-            itemDiv.innerHTML = innerContent.replace("{item.name}", item.name).replace("{item.category}", item.category).replace("{item.price}", item.price).replace("{item.id}", item._id.$oid);
+            itemDiv.innerHTML = innerContent.replace("{item.title}", item.title).replace("{item.category}", item.category).replace("{item.price}", item.price).replace("{item.id}", item._id.$oid);
         });
 
         itemPanel.appendChild(itemDiv);

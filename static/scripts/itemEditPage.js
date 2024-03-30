@@ -33,7 +33,7 @@ async function setFormContent(item)
     var button = document.querySelector(".button-36");
     for (let key in item) {
         if (item.hasOwnProperty(key)) {
-            if(key!="_id" && key!="ownerEmail")
+            if(key!="_id" && key!="owner_id")
             {   
                 var label = document.createElement('label');
                 label.setAttribute('id', key+"_label");

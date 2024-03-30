@@ -85,7 +85,9 @@ def itemEditPage():
     item_id = request.args.get('id')
     print(request.args)
     return render_template('itemEditPage.html', item_id=item_id)
-
+@app.route('/itemAddPage', methods=['POST','GET'])
+def itemAddPage():
+    return render_template('itemAddPage.html')
 
 # Account api
 @app.route('/updateProfile', methods=['POST'])
@@ -100,9 +102,9 @@ def updateProfile():
 
 @app.route('/getItems', methods=['GET'])
 def getItems():
-    current_user =get_user_by_email(session.get('user')["userinfo"]["email"])
+    current_user = get_user_by_email(session.get('user')["userinfo"]["email"])
     collection = mongo_db.get_collection("items")
-    lst = collection.find({"ownerEmail": current_user["email"]},)
+    lst = collection.find({"owner_id":  current_user.get('_id', {})},)
     json_lst = json_util.dumps(lst)
     return json_lst
 
@@ -132,13 +134,25 @@ def updateItem():
     collection = mongo_db.get_collection("items")
     data = request.json
     obj_id = ObjectId(data.get('_id', {}).get('$oid'))
-    update_data = {key: value for key, value in data.items() if key != '_id'}
+    update_data = {key: value for key, value in data.items() if key != '_id' and key != 'owner_id'}
     result = collection.update_one({'_id': obj_id}, {'$set': update_data})
     if result.modified_count > 0:
         return "Item is updated"
     else:
         return "Some error occured"
     
+# Add Item Api
+@app.route('/addItem', methods=['POST'])
+def addItem():
+    current_user = get_user_by_email(session.get('user')["userinfo"]["email"])
+    collection = mongo_db.get_collection("items")
+    data = request.json
+    data["owner_id"] = current_user.get('_id', {})
+    result = collection.insert_one(data)
+    if result.inserted_id:
+        return "Item is added successfully"
+    else:
+        return "Some error occured"
 # Helper functions
 def add_account_after_signUp():
     collection = mongo_db.get_collection("profiles")

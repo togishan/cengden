@@ -96,3 +96,35 @@ h1 {
         padding: 0 2.6rem;
     }
 }
+
+select {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    width: 200px; 
+    appearance: none; 
+    background-color: #f8f9fa; 
+    color: #333; 
+    cursor: pointer; 
+    margin-bottom: 5%;
+}
+
+select:after {
+    content: '\25BC'; 
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    pointer-events: none; 
+}
+
+select option {
+    background-color: #f8f9fa; 
+    color: #333; 
+}
+
+select option:checked {
+    background-color: #007bff;
+    color: white; 
+}

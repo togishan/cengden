@@ -83,11 +83,56 @@ def accountPage():
 @app.route('/itemEditPage', methods=['POST','GET'])
 def itemEditPage():
     item_id = request.args.get('id')
-    print(request.args)
     return render_template('itemEditPage.html', item_id=item_id)
 @app.route('/itemAddPage', methods=['POST','GET'])
 def itemAddPage():
     return render_template('itemAddPage.html')
+
+# Home Page api
+@app.route('/getAllItems', methods = ["GET"])
+def getAllItems():
+    collection = mongo_db.get_collection("items")
+    lst = collection.find({"hide": False},)
+    json_lst = json_util.dumps(lst)
+    items = json.loads(json_lst)
+    for i in range(len(items)):
+        if not session and items[i].get("viewable_contact") == False:
+            items[i].pop("contact_email", None)
+            items[i].pop("phone_number", None)
+    return items
+
+@app.route('/getItemDetails', methods=['POST'])
+def getItemDetails():
+    collection = mongo_db.get_collection("items")
+    data = request.json
+    objID = ObjectId(data.get('id'))
+    lst = collection.find_one({'_id': objID})
+    json_lst = json_util.dumps(lst)
+    item = json.loads(json_lst)
+    if not session and item.get("viewable_contact") == False:
+        item.pop("contact_email", None)
+        item.pop("phone_number", None)
+    return item
+
+@app.route('/addItemToFavorites', methods=['POST'])
+def addItemToFavorites():
+    collection = mongo_db.get_collection("favourite_items-profiles")
+    current_user = get_user_by_email(session.get('user')["userinfo"]["email"])
+    data = request.json
+    objID = ObjectId(data.get('id'))
+    user_id = current_user.get('_id',{})
+    print(objID)
+    result = collection.update_one(
+        {"user_id": user_id},
+        {"$addToSet": {"item_ids": objID}},
+        upsert=True
+    )
+
+    if result.modified_count == 0:
+        return "Item is already in your favourites"
+    else:
+        return "Item added to your favourites successfully"
+
 
 # Account api
 @app.route('/updateProfile', methods=['POST'])
@@ -98,10 +143,12 @@ def updateProfile():
     username = data.get('username') or ""
     phone_number = data.get('phone_number') or ""
     collection.update_one({"email": current_user["email"]}, {"$set": {"username": username, "phone_number": phone_number}})
+    collection = mongo_db.get_collection("items")
+    collection.update_many({"contact_email": current_user["email"]}, {"$set" : {"phone_number":phone_number}})
     return "Profile updated successfully"
 
-@app.route('/getItems', methods=['GET'])
-def getItems():
+@app.route('/getItemsOfCurrentUser', methods=['GET'])
+def getItemsOfCurrentUser():
     current_user = get_user_by_email(session.get('user')["userinfo"]["email"])
     collection = mongo_db.get_collection("items")
     lst = collection.find({"owner_id":  current_user.get('_id', {})},)
@@ -118,6 +165,34 @@ def deleteItem():
         return "Item deleted successfully"
     else:
         return "Some error occured"
+
+@app.route('/getFavouriteItemsOfCurrentUser', methods=['GET'])
+def getFavouriteItemsOfCurrentUser():
+    current_user = get_user_by_email(session.get('user')["userinfo"]["email"])
+    collection = mongo_db.get_collection("favourite_items-profiles")    
+    result = collection.find_one({"user_id":  current_user.get('_id', {})})
+    if result:
+        item_ids = result.get('item_ids', [])
+        items_collection = mongo_db.get_collection("items")
+        items = items_collection.find({"_id": {"$in": item_ids}, "hide": False}, {"_id": 0})
+        json_lst = json_util.dumps(items)
+        return json_lst
+    else:
+        return "No favourite items found for the current user"
+    
+@app.route('/getAllItemsWithFilter', methods=['POST'])
+def getAllItemsWithFilter():
+    data = request.json
+    collection = mongo_db.get_collection("items")    
+    filters = {key: value for key, value in data.items()}
+    items = collection.find(filters)
+    json_lst = json_util.dumps(items)
+    items = json.loads(json_lst)
+    print(json_lst)
+    result = []
+    for item in items:
+        result.append(item)
+    return jsonify(result)
 
 # Item Edit Api
 @app.route('/getItem', methods=['POST'])
@@ -148,6 +223,8 @@ def addItem():
     collection = mongo_db.get_collection("items")
     data = request.json
     data["owner_id"] = current_user.get('_id', {})
+    data["contact_email"] = current_user.get('email')
+    data["phone_number"] = current_user.get('phone_number')
     result = collection.insert_one(data)
     if result.inserted_id:
         return "Item is added successfully"

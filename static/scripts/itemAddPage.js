@@ -204,7 +204,9 @@ async function addItem(){
             engine_displacement: document.getElementById('engine_displacement').value,
             fuel_type: document.getElementById('fuel_type').value,
             transmission_type: document.getElementById('transmission_type').value,
-            mileage: document.getElementById('mileage').value
+            mileage: document.getElementById('mileage').value,
+            hide: document.getElementById('hide_item').checked,
+            viewable_contact: document.getElementById('viewable_contact').checked
         };
     } else if (category === 'Computer') {
         data = {
@@ -221,7 +223,9 @@ async function addItem(){
             ram: document.getElementById('ram').value,
             storage: document.getElementById('storage').value,
             graphics_card: document.getElementById('graphics_card').value,
-            operating_system: document.getElementById('operating_system').value
+            operating_system: document.getElementById('operating_system').value,
+            hide: document.getElementById('hide_item').checked,
+            viewable_contact: document.getElementById('viewable_contact').checked
         };
     } else if (category === 'Phone') {
         data = {
@@ -238,7 +242,9 @@ async function addItem(){
             storage: document.getElementById('storage').value,
             operating_system: document.getElementById('operating_system').value,
             camera_specifications: document.getElementById('camera_specifications').value,
-            battery_capacity: document.getElementById('battery_capacity').value
+            battery_capacity: document.getElementById('battery_capacity').value,
+            hide: document.getElementById('hide_item').checked,
+            viewable_contact: document.getElementById('viewable_contact').checked
         };
     } else {
         data = {
@@ -250,7 +256,9 @@ async function addItem(){
             tutor_name: document.getElementById('tutor_name').value,
             lessons: document.getElementById('lessons').value,
             location: document.getElementById('location').value,
-            duration: document.getElementById('duration').value
+            duration: document.getElementById('duration').value,
+            hide: document.getElementById('hide_item').checked,
+            viewable_contact: document.getElementById('viewable_contact').checked
         };
     }
     var xhr = new XMLHttpRequest();

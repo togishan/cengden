@@ -9,14 +9,17 @@
         border-radius: 5px;
         padding: 10px;
         margin-bottom: 10px;
+        
     }
 
     .item-details {
         margin-bottom: 10px;
+        
     }
 
     .item-actions {
         text-align: right;
+        
     }
 
     .btn-edit,
@@ -45,7 +48,7 @@
         user-select: none;
         -webkit-user-select: none;
         touch-action: manipulation;
-        margin-right: 40%;
+        margin-right: 10%;
     }
     .button-36-delete {
         background-image: linear-gradient(92.88deg, #dd0505 9.16%, #bd4e08 43.89%, #600b01 64.72%);
@@ -66,7 +69,7 @@
         user-select: none;
         -webkit-user-select: none;
         touch-action: manipulation;
-        margin-right: 40%;
+        margin-right: 1%;
     }
     .button-36-edit:hover {
         box-shadow: rgba(4, 177, 199, 0.5) 0 1px 30px;
@@ -95,9 +98,14 @@
 <body> 
     <div class="item-box">
         <div class="item-details">
-            <h3>{item.title}</h3>
-            <p>Category: {item.category}</p>
-            <p>Price: {item.price} ₺</p>
+            <img style="max-width: 200px; max-height: 200px; float: left; margin-right: 20px;" src="{item.image}" >
+            <div style="display: inline-block;">
+                <h3>{item.title}</h3>
+                <p>Category: {item.category}</p>
+                <p>Price: {item.price} ₺</p>
+                <p>Description: {item.description}</p>
+            </div>
+            <div style="clear: both;"></div>
         </div>
         <div class="item-actions">
             <div id="objID"  hidden>{item.id} </div>

@@ -1,6 +1,7 @@
 
 document.addEventListener("DOMContentLoaded", function() {
-    getItems();
+    getItemsOfCurrentUser();
+    getFavouriteItemsOfCurrentUser();
 });
 
 function updateProfile()
@@ -19,7 +20,7 @@ function updateProfile()
     xhr.send(JSON.stringify({username: username, email: email, phone_number: phone_number}));
 }
 
-function getItems()
+function getItemsOfCurrentUser()
 {
     var xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function() {
@@ -27,7 +28,7 @@ function getItems()
             setItemsPanel(xhr.responseText);
         }
     };
-    xhr.open("GET", "/getItems", true);
+    xhr.open("GET", "/getItemsOfCurrentUser", true);
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
     xhr.send();
 }
@@ -41,7 +42,11 @@ function setItemsPanel(response)
         itemDiv.className = "item-box";
         itemDiv.style.display = "block";
         loadInnerContent("/static/html/itemContainer.html", function(innerContent) {
-            itemDiv.innerHTML = innerContent.replace("{item.title}", item.title).replace("{item.category}", item.category).replace("{item.price}", item.price).replace("{item.id}", item._id.$oid);
+            itemDiv.innerHTML = innerContent.replace("{item.title}", item.title)
+            .replace("{item.category}", item.category).replace("{item.price}", item.price)
+            .replace("{item.id}", item._id.$oid)
+            .replace("{item.image}", item.image)
+            .replace("{item.description}", item.description);
         });
 
         itemPanel.appendChild(itemDiv);
@@ -70,4 +75,39 @@ async function deleteItem(itemId){
     xhr.open("POST", "/deleteItem", true);
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
     xhr.send(JSON.stringify(itemId));
+}
+
+function getFavouriteItemsOfCurrentUser()
+{
+    var xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState == 4) {
+            setFavouriteItemsPanel(xhr.responseText);
+        }
+    };
+    xhr.open("GET", "/getFavouriteItemsOfCurrentUser", true);
+    xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    xhr.send();
+}
+
+
+function setFavouriteItemsPanel(response)
+{
+    var items = JSON.parse(response);
+    var itemPanel = document.getElementById("favourite-item-panel");
+    console.log(items);
+    items.forEach(function(item) {
+        var itemDiv = document.createElement("div");
+        itemDiv.className = "item-box";
+        itemDiv.style.display = "block";
+        loadInnerContent("/static/html/favouriteItemContainer.html", function(innerContent) {
+            itemDiv.innerHTML = innerContent.replace("{item.title}", item.title)
+            .replace("{item.category}", item.category)
+            .replace("{item.price}", item.price)
+            .replace("{item.image}", item.image)
+            .replace("{item.description}", item.description)
+        });
+
+        itemPanel.appendChild(itemDiv);
+    });
 }

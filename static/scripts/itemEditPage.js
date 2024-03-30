@@ -39,16 +39,27 @@ async function setFormContent(item)
                 label.setAttribute('id', key+"_label");
                 label.innerHTML = parseLabelName(key);
                 container.insertBefore(label, button);
-                var input = document.createElement('input');
-                input.setAttribute('id', key);
-                input.setAttribute('type', 'text');
-                input.setAttribute('placeholder', 'Enter here');
-                input.value = item[key];
-                if(key == "category")
+                if(key=="hide" || key == "viewable_contact")
                 {
-                    input.setAttribute('disabled', true);
+                    var checkbox = document.createElement('input');
+                    checkbox.setAttribute('type', 'checkbox');
+                    checkbox.setAttribute('id', key);
+                    checkbox.checked = item[key];
+                    container.insertBefore(checkbox, button);
                 }
-                container.insertBefore(input, button);
+                else
+                {
+                    var input = document.createElement('input');
+                    input.setAttribute('id', key);
+                    input.setAttribute('type', 'text');
+                    input.setAttribute('placeholder', 'Enter here');
+                    input.value = item[key];
+                    container.insertBefore(input, button);
+                    if(key == "category" || key == "contact_email" || key == "phone_number")
+                    {
+                        input.setAttribute('disabled', true);
+                    }
+                }
             }
         }
     }
@@ -81,7 +92,15 @@ async function updateItem(){
     var container = document.querySelector(".form-inner");
     var inputs = container.querySelectorAll("input");
     inputs.forEach(function(input) {
-        item[input.id] = input.value;
+        console.log(input.id)
+        if(input.id == "hide" || input.id == "viewable_contact")
+        {
+            item[input.id] = input.checked;
+        }
+        else
+        {
+            item[input.id] = input.value;
+        }
     });
     return new Promise((reject) => {
         var xhr = new XMLHttpRequest();

@@ -26,10 +26,52 @@
     </header>
     
     <nav>
-        <button onclick="getAllItems()">Home</button>
-        <button onclick="getAllItemsWithFilter({'category':'Vehicle'})">Vehicles</button>
-        <button onclick="getAllItemsWithFilter({'category':'Computer'})">Computers</button>
-        <button onclick="getAllItemsWithFilter({'category':'Private Lessons'})">Private Lessons</button>
+        
+
+        <div class="filter-panel">
+            <fieldset class = "checkbox-container">
+                <div>
+                    <label for="All_checkbox">All</label>
+                    <input type="checkbox" id="All_checkbox" onclick="addCategoryToFilters('All')" checked=true />    
+                </div>
+                <div>
+                    <label for="Vehice_checkbox">Vehicle</label>
+                    <input type="checkbox" id="Vehicle_checkbox" onclick="addCategoryToFilters('Vehicle')" />    
+                </div>
+                <div>
+                    <label for="Computer_checkbox">Computer</label>
+                    <input type="checkbox" id="Computer_checkbox" onclick="addCategoryToFilters('Computer')"/>
+                </div>
+                <div>
+                    <label for="Phone_checkbox">Phone</label>
+                    <input type="checkbox" id="Phone_checkbox" onclick="addCategoryToFilters('Phone')"/>    
+                </div>
+                <div>
+                    <label for="Private Lesson_checkbox">Private Lessons</label>
+                    <input type="checkbox" id="Private Lesson_checkbox" onclick="addCategoryToFilters('Private Lesson')"/>
+                </div>
+            </fieldset>
+            
+            <label for="min-price">Min Price:</label>
+            <select id="min-price" onchange="addMinPriceToFilters()">
+                <option value="0">Any</option>
+                <option value="100">100</option>
+                <option value="500">500</option>
+                <option value="1000">1000</option>
+            </select>
+            <label for="max-price">Max Price:</label>
+            <select id="max-price" onchange="addMaxPriceToFilters()">
+                <option value="9999999">Any</option>
+                <option value="5000">5000</option>
+                <option value="10000">10000</option>
+                <option value="50000">50000</option>
+                <option value="1000000">100000</option>
+            </select>
+            <br>
+            <button onclick="getAllItemsWithFilter()" >Apply</button>
+        </div>
+        <!-- End Filter Panel -->
+        
     </nav>
     <h2 style="margin-left:25px;">Items</h2>
     <section id="item-panel">

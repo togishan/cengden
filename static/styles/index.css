@@ -83,3 +83,11 @@ section {
     text-decoration: none;
     cursor: pointer;
 }
+
+
+.checkbox-container {
+    display: flex;
+    gap: 30px;
+    justify-content: center;
+    margin: auto;
+}

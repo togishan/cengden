@@ -7,7 +7,8 @@ from os import environ as env
 from urllib.parse import quote_plus, urlencode
 from dotenv import find_dotenv, load_dotenv
 from authlib.integrations.flask_client import OAuth
-
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import Mail, To
 
 # Mongo settings
 mongo_uri = "mongodb+srv://oguzhantaskin:dhqJYdxkvA7KODUk@cluster0.mx50u9u.mongodb.net/?retryWrites=true&w=majority"
@@ -31,8 +32,13 @@ oauth.register(
     server_metadata_url=f'https://{env.get("AUTH0_DOMAIN")}/.well-known/openid-configuration'
 )
 
-# Current user (fetched from the db)
 current_user = None
+
+# SendGrid settings
+SENDGRID_API_KEY = "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"
+send_grid = SendGridAPIClient(SENDGRID_API_KEY)
+
+
 
 # Auth api
 @app.route("/login")
@@ -73,6 +79,7 @@ def logout():
 # Navigation api
 @app.route('/')
 def home():
+
     return render_template("index.html", session=session.get('user'), pretty=json.dumps(session.get('user'),indent=4))
 
 @app.route('/accountPage')
@@ -95,6 +102,7 @@ def getAllItems():
     lst = collection.find({"hide": False},)
     json_lst = json_util.dumps(lst)
     items = json.loads(json_lst)
+
     for i in range(len(items)):
         if not session and items[i].get("viewable_contact") == False:
             items[i].pop("contact_email", None)
@@ -121,17 +129,20 @@ def addItemToFavorites():
     data = request.json
     objID = ObjectId(data.get('id'))
     user_id = current_user.get('_id',{})
-    print(objID)
+    # user id by id items
     result = collection.update_one(
         {"user_id": user_id},
         {"$addToSet": {"item_ids": objID}},
         upsert=True
     )
-
-    if result.modified_count == 0:
-        return "Item is already in your favourites"
-    else:
-        return "Item added to your favourites successfully"
+    # item id by id users
+    collection = mongo_db.get_collection("profiles-favourite_items")
+    collection.update_one(
+        {"item_id": objID},
+        {"$addToSet": {"user_ids": user_id}},
+        upsert=True
+    )
+    return "Item added to your favourites successfully"
 
 
 # Account api
@@ -182,9 +193,17 @@ def getFavouriteItemsOfCurrentUser():
     
 @app.route('/getAllItemsWithFilter', methods=['POST'])
 def getAllItemsWithFilter():
+    filters = {}
     data = request.json
     collection = mongo_db.get_collection("items")    
-    filters = {key: value for key, value in data.items()}
+    for key, value in data.items():
+        if key == "category" and value != "All":
+            filters[key] = value
+        elif key == "price_min":
+            filters["price"] = {**filters.get("price", {}), **{'$gt': int(value)}}
+        elif key == "price_max":
+            filters["price"] = {**filters.get("price", {}), **{'$lt': int(value)}}
+    print(filters)
     items = collection.find(filters)
     json_lst = json_util.dumps(items)
     items = json.loads(json_lst)
@@ -210,18 +229,43 @@ def updateItem():
     data = request.json
     obj_id = ObjectId(data.get('_id', {}).get('$oid'))
     update_data = {key: value for key, value in data.items() if key != '_id' and key != 'owner_id'}
+    update_data["price"] = int(update_data["price"])
     result = collection.update_one({'_id': obj_id}, {'$set': update_data})
-    if result.modified_count > 0:
-        return "Item is updated"
-    else:
-        return "Some error occured"
-    
+
+
+    # Get users who added item to their favourites
+    collection = mongo_db.get_collection("profiles-favourite_items")
+    result = collection.find_one({"item_id":  obj_id})
+
+    if result:
+        user_ids = result.get('user_ids', [])
+        users_collection = mongo_db.get_collection("profiles")
+        users = users_collection.find({"_id": {"$in": user_ids}}, {"_id": 0})
+        json_lst = json_util.dumps(users)
+        users = json.loads(json_lst)
+        to_emails = []
+        for i in users:
+            to_emails.append(To(i["email"]))
+        print(to_emails)
+    if to_emails:
+        message = Mail(
+            from_email='e2448876@ceng.metu.edu.tr',
+            to_emails=to_emails,
+            subject='The item in your favourites updated',
+            html_content='<strong>One of the items in your favourites is changed. Check it now!</strong>')
+    response = send_grid.send(message)
+    print(response.status_code)
+    print(response.body)
+    print(response.headers)
+    return "Item is updated"
+
 # Add Item Api
 @app.route('/addItem', methods=['POST'])
 def addItem():
     current_user = get_user_by_email(session.get('user')["userinfo"]["email"])
     collection = mongo_db.get_collection("items")
     data = request.json
+    data["price"] = int(data["price"])
     data["owner_id"] = current_user.get('_id', {})
     data["contact_email"] = current_user.get('email')
     data["phone_number"] = current_user.get('phone_number')

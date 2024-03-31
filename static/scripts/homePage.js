@@ -1,4 +1,9 @@
 
+var filters={
+    category:"All",
+    price_min:"0",
+    price_max:"99999999"
+};
 
 document.addEventListener("DOMContentLoaded", function() {
     getAllItems();
@@ -9,23 +14,19 @@ async function getAllItems()
     var xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function() {
         if (xhr.readyState == 4) {
-            console.log(xhr.response)
             setItemsPanel(xhr.response);
         }
     };
     xhr.open("GET", "/getAllItems", true);
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
     xhr.send();
-}/*
-for (var i = children.length - 1; i >= 0; i--) {
-    var child = children[i];
-    if (child.tagName === 'LABEL' || child.tagName === 'BR') {
-        container.removeChild(child);
-    }
-}*/
-async function getAllItemsWithFilter(filter)
+}
+
+async function getAllItemsWithFilter()
 {
-    let data = JSON.stringify(filter);
+    console.log(filters)
+    let data = JSON.stringify(filters);
+    console.log(data);
     var xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function() {
         if (xhr.readyState == 4) {
@@ -35,6 +36,26 @@ async function getAllItemsWithFilter(filter)
     xhr.open("POST", "/getAllItemsWithFilter", true);
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
     xhr.send(data);
+}
+
+function addCategoryToFilters(filter) {
+    filters.category = filter;
+    document.getElementById("All_checkbox").checked = false;
+    document.getElementById("Vehicle_checkbox").checked = false;
+    document.getElementById("Computer_checkbox").checked = false;
+    document.getElementById("Phone_checkbox").checked = false;
+    document.getElementById("Private Lesson_checkbox").checked = false;
+    document.getElementById(filter+"_checkbox").checked = true;
+}
+function addMinPriceToFilters() {
+    var minPriceSelect = document.getElementById("min-price");
+    var selectedMinPrice = minPriceSelect.value;
+    filters.price_min = selectedMinPrice;
+}
+function addMaxPriceToFilters() {
+    var maxPriceSelect = document.getElementById("max-price");
+    var selectedMaxPrice = maxPriceSelect.value;
+    filters.price_max = selectedMaxPrice;
 }
 
 function setItemsPanel(response)
@@ -71,8 +92,7 @@ function loadInnerContent(filePath, callback) {
     xhr.send();
 }
 
-function openModal() {
-    let objID = document.getElementById("objID").innerHTML;
+function openModal(objID) {
     var xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function() {
         if (xhr.readyState == 4) {

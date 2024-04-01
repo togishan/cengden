@@ -95,7 +95,6 @@ function setFavouriteItemsPanel(response)
 {
     var items = JSON.parse(response);
     var itemPanel = document.getElementById("favourite-item-panel");
-    console.log(items);
     items.forEach(function(item) {
         var itemDiv = document.createElement("div");
         itemDiv.className = "item-box";

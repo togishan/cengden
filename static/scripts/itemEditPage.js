@@ -92,7 +92,6 @@ async function updateItem(){
     var container = document.querySelector(".form-inner");
     var inputs = container.querySelectorAll("input");
     inputs.forEach(function(input) {
-        console.log(input.id)
         if(input.id == "hide" || input.id == "viewable_contact")
         {
             item[input.id] = input.checked;

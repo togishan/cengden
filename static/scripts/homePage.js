@@ -24,9 +24,7 @@ async function getAllItems()
 
 async function getAllItemsWithFilter()
 {
-    console.log(filters)
     let data = JSON.stringify(filters);
-    console.log(data);
     var xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function() {
         if (xhr.readyState == 4) {

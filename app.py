@@ -186,7 +186,6 @@ def getFavouriteItemsOfCurrentUser():
         item_ids = result.get('favourite_item_ids', [])
         items_collection = mongo_db.get_collection("items")
         items = items_collection.find({"_id": {"$in": item_ids}, "hide": False})
-        print("Items:")
         json_lst = json_util.dumps(items)
         return json_lst
 

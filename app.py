@@ -238,7 +238,7 @@ def updateItem():
     if current_price > new_price:
         send_email = True
         
-    // Update the item
+    # Update the item
     result = collection.update_one({'_id': obj_id}, {'$set': update_data})
 
     if send_email:

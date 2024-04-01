@@ -184,8 +184,12 @@ def getFavouriteItemsOfCurrentUser():
     result = collection.find({"_id": current_user.get('_id', {})})
     if result:
         item_ids = result.get('favourite_item_ids', [])
+        print("Item_ids:")
+        print(item_ids)
         items_collection = mongo_db.get_collection("items")
         items = items_collection.find({"_id": {"$in": item_ids}, "hide": False}, {"_id": 0})
+        print("Items:")
+        print(items)
         json_lst = json_util.dumps(items)
         return json_lst
     else:
@@ -234,8 +238,8 @@ def updateItem():
     
     # Check if the price is dropped. If it is dropped, send an email to the related users.
     send_email = False
-    current_price = current_item.get('price', 0)
-    if current_price > new_price:
+    current_price = int(current_item.get('price', 0))
+    if current_price > update_data["price"]:
         send_email = True
         
     # Update the item

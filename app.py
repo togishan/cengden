@@ -255,7 +255,7 @@ def updateItem():
             user_emails = json.loads(json_lst)
             to_emails = []
             for i in user_emails:
-                to_emails.append(To(i["email"]))
+                to_emails.append(To(i))
             print(to_emails)
         if to_emails:
             message = Mail(

@@ -251,8 +251,6 @@ def updateItem():
         result = collection.find_one({"_id":  obj_id})  
         if result:
             user_emails = result.get('user_emails', [])
-            json_lst = json_util.dumps(user_emails)
-            user_emails = json.loads(json_lst)
             to_emails = []
             for i in user_emails:
                 to_emails.append(To(i))

@@ -181,20 +181,15 @@ def deleteItem():
 def getFavouriteItemsOfCurrentUser():
     current_user = get_user_by_email(session.get('user')["userinfo"]["email"])
     collection = mongo_db.get_collection("profiles")    
-    result = collection.find({"_id": current_user.get('_id', {})})
-    if result:
+    result = collection.find_one({"_id": current_user.get('_id', {})})
+    if result:     
         item_ids = result.get('favourite_item_ids', [])
-        print("Item_ids:")
-        print(item_ids)
         items_collection = mongo_db.get_collection("items")
-        items = items_collection.find({"_id": {"$in": item_ids}, "hide": False}, {"_id": 0})
+        items = items_collection.find({"_id": {"$in": item_ids}, "hide": False})
         print("Items:")
-        print(items)
         json_lst = json_util.dumps(items)
         return json_lst
-    else:
-        return "No favourite items found for the current user"
-    
+
 @app.route('/getAllItemsWithFilter', methods=['POST'])
 def getAllItemsWithFilter():
     filters = {}
@@ -207,11 +202,9 @@ def getAllItemsWithFilter():
             filters["price"] = {**filters.get("price", {}), **{'$gt': int(value)}}
         elif key == "price_max":
             filters["price"] = {**filters.get("price", {}), **{'$lt': int(value)}}
-    print(filters)
     items = collection.find(filters)
     json_lst = json_util.dumps(items)
     items = json.loads(json_lst)
-    print(json_lst)
     result = []
     for item in items:
         result.append(item)
@@ -248,23 +241,19 @@ def updateItem():
     if send_email:
         # Get users who added item to their favourites
         collection = mongo_db.get_collection("items")
-        result = collection.find_one({"_id":  obj_id})  
+        result = collection.find_one({"_id":  obj_id}) 
         if result:
-            user_emails = result.get('user_emails', [])
+            user_emails = result.get('user_emails', '').split(',')
             to_emails = []
             for i in user_emails:
                 to_emails.append(To(i))
-            print(to_emails)
         if to_emails:
             message = Mail(
                 from_email='e2448876@ceng.metu.edu.tr',
                 to_emails=to_emails,
                 subject='The item in your favourites updated',
                 html_content='<strong>One of the items in your favourites is changed. Check it now!</strong>')
-        response = send_grid.send(message)
-        print(response.status_code)
-        print(response.body)
-        print(response.headers)
+        send_grid.send(message)
     return "Item is updated"
 
 # Add Item Api
